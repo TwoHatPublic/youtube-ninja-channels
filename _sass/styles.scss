@@ -1,0 +1,186 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700');
+
+// vars
+$spacer : 24px;
+// colors
+$white : #fff;
+$black : #4B5C64; //#595D5F;
+$orange : #fc800c; //#F35935;
+$blue : darken(#15b9d2, 6%);
+$blue-dark : lighten($blue, 15%);
+$green : #10b304;
+$red : #E02706;
+$yellow : #f3c903; 
+
+$mild : rgba($red, 0.33);
+$bad: rgba($red, 0.66);
+$severe : darken($red, 6%);
+
+@import "nav";
+@import "ui-loading";
+
+// defaults
+body {
+    background: darken($white, 5.5%);
+    color: $black;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size: 0.825em;   
+}
+h1, h2, h3 {
+    margin-bottom: $spacer * 1.5;
+}
+h4 {
+    line-height: 30px;
+    font-weight: bolder;
+    text-transform: uppercase;
+    margin: 0;
+}
+p {
+    line-height: 1.625em;
+}
+a {
+    text-decoration: none;
+}
+form {
+    position: relative;
+    label {
+        font-size: 12px;
+        position: absolute;
+        left: $spacer;
+        top: 12px;
+    }
+    input {
+        width: calc(100% - #{$spacer * 2});
+        border: none;
+        padding: $spacer+5 $spacer $spacer - 5;
+        font-size: 24px;
+        background: lighten($blue, 45%);
+        &:focus {
+            outline: none;
+        }
+    }
+    &.processing {
+        input {
+            visibility: hidden;
+        }
+    }
+    margin-bottom: $spacer/4;
+}
+
+// layout
+
+.dashboard-wrapper {
+    position: absolute;
+    
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow-x: scroll;
+    .dashboard {
+        position: absolute;
+        top: $spacer * 4;
+        bottom: 0;
+        left: 0;
+        > div {
+            position: relative;
+            background: darken(#fff, 12%); 
+            z-index: 1;
+            width: 380px;
+            height: calc(100% - #{$spacer/2});
+            padding: $spacer/4;
+            overflow: hidden;
+            overflow-y: scroll;
+            float: left;
+            margin-left: $spacer/4;
+        }
+    }
+}
+
+// lists
+.list-item {
+    position: relative;
+    margin-top: 4px;
+    background: darken($white, 5%);
+    padding: $spacer/2;
+    transition: all 260ms ease-in-out;
+    &.flag {
+        padding-top: $spacer;
+        background: lighten(crimson, 45%);
+        cursor: pointer;
+        
+        span {
+            &:nth-of-type(2) {
+                display: none;
+            }
+        }
+        &:active {
+            span:nth-of-type(1) {
+                display: none;
+            }
+            span:nth-of-type(2) {
+                display: block;
+            }
+        }
+        &:hover {
+            background: lighten(yellow, 45%);
+        }
+    }
+    small {
+        text-transform: uppercase;
+        color: lighten($black, 15%);
+    }
+    
+}
+
+.list-item-meta {
+    position: relative;
+    background: darken($black, 18%);
+    color: $white;
+    padding: $spacer/2;
+    display: block;
+    overflow: hidden;
+    > div {
+        position: relative;
+        z-index: 1;
+        text-transform: uppercase;
+    }
+    .progress-bar {
+        position: absolute;
+        z-index: 0;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        height: 100%;
+        background: $white;
+        background: darken($black, 0%);
+    }
+}
+
+.tags {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.tag {
+    display: inline-block;
+    padding: 8px;
+    text-transform: uppercase;
+    font-size: 12px;
+    line-height: 12px;
+    color: $white;
+    font-weight: 700;
+    margin-left: 2px;
+}
+* {
+    &.mild {
+        background: $mild;
+    }
+    &.bad {
+        background: $bad;
+    }
+    &.severe {
+        background: $severe;
+    }
+}

@@ -1,0 +1,39 @@
+.ui-loading {
+    position: relative;
+    
+    height: 100%;
+    min-height: 100px;
+    > div {
+        position: absolute;
+        width: 66px;
+        height: 66px;
+        border: 8px solid $blue;
+        border-top-color: lighten($blue, 35%);
+        border-left-color: lighten($blue, 35%);
+        display: block;
+        left: calc(50% - 33px);
+        top: calc(50% - 33px);
+        border-radius: 100%;
+        animation-name: spinner;
+        animation-duration: 560ms;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+    }
+    &.mini {
+        min-height: 44px;
+        > div {
+            width: 22px;
+            height: 22px;
+            left: calc(50% - 15px);
+            top: calc(50% - 15px);
+        }
+    }
+    &.off {
+        display: none;
+    }
+}
+
+@keyframes spinner {
+    0%   {transform: rotate(0deg)}
+    100%   {transform: rotate(360deg)}
+}

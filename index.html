@@ -18,15 +18,42 @@
 </head>
 <body class="layout-rankings">
 
-<section class="post-auth dashboard-wrapper">
-    
-    <section class="dashboard js-target"></section>
+<section class="pre-auth" style="text-align: center; padding: 22px; display: table; position: absolute; left: 0; right: 0; bottom: 0; top: 0; height: 100%; width: 100%;">
+    <div style="display: table-cell; vertical-align: middle; width: 100%;">
+    <h1>Demo of YouTube &amp; Sift Ninja</h1>
+    <h2 style="margin-bottom: 88px;">Runs comments (per user) through Sift Ninja's classifier flagging abusive content.<br>
+        <em><a href="https://developers.google.com/youtube/v3/docs/commentThreads">YouTube Data API commentThreads</a></em>
+    </h2>
+    <p><a href="#" id="login-link" class="pre-auth btn">login to start</a></p>
+    </div>
 </section>
 
-<nav>
-    <div>youtube</div>
+<section class="post-auth dashboard-wrapper">
+    <section class="dashboard js-target">
+        <div class="ui-admin">
+            <h3>YouTube User Names:</h3>
+<textarea class="js-channels">tyleroakley,
+caseyneistat,
+vlogbrothers,
+LastWeekTonight,
+vicenews,
+TheYoungTurks,
+MatthewPatrick13,
+jacksepticeye,
+ChloeMorello,
+MichellePhan,
+ThreadBanger,
+destinws2,
+pbsideachannel</textarea>
+            <a href="#" class="js-start btn">Run Demo</a>
+        </div>
+    </section>
+</section>
+
+<nav class="post-auth">
+    <div>youtube demo</div>
     <div></div>
-    <div><a href="#" class="ui-add-list post-auth">Add Channel</a><a href="#" id="login-link" class="pre-auth">login</a></div>
+    <div><a href="#" class="ui-add-list post-auth">Add Channel</a></div>
 </nav>
 
 <!-- templates -->

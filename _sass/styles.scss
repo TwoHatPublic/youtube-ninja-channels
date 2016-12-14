@@ -41,6 +41,15 @@ p {
 }
 a {
     text-decoration: none;
+    color: $blue;
+    &.btn {
+        background: $blue;
+        color: #fff;
+        text-transform: uppercase;
+        padding: $spacer;
+        display: inline-block;
+        text-align: center;
+    }
 }
 form {
     position: relative;
@@ -66,6 +75,17 @@ form {
         }
     }
     margin-bottom: $spacer/4;
+}
+textarea {
+    border: none;
+    color: $black;
+    padding: $spacer/2;
+    display: block;
+    width: calc(100% - #{$spacer});
+    min-height: 400px;
+    font-size: 16px;
+    line-height: 24px;
+    background: lighten(yellow, 30%);
 }
 
 // layout
@@ -94,6 +114,10 @@ form {
             overflow-y: scroll;
             float: left;
             margin-left: $spacer/4;
+            .btn {
+                display: block;
+                margin-top: $spacer/4;
+            }
         }
     }
 }

@@ -9,16 +9,21 @@ var Tube = (function ($) {
 	jk.vars = {
     	cnt : 0,
     	timer : 100,
-        channels : ["tyleroakley","caseyneistat","vlogbrothers", "LastWeekTonight", "vicenews", "TheYoungTurks", "MatthewPatrick13", "jacksepticeye", "ChloeMorello", "MichellePhan", "ThreadBanger", "destinws2", "pbsideachannel"]
-        //channels : ["LastWeekTonight"]
+        //channels : ["tyleroakley","caseyneistat","vlogbrothers", "LastWeekTonight", "vicenews", "TheYoungTurks", "MatthewPatrick13", "jacksepticeye", "ChloeMorello", "MichellePhan", "ThreadBanger", "destinws2", "pbsideachannel"]
+        channels : ["LastWeekTonight"]
 	}
 /* --------------------------------------------------	
 -------------------------------------------------- */
     // INIT this f**ker
     jk.init = function () {
+        
+        // append these channels:
+        // jk.vars.channels = [];
+        
+        // listeners
         jk.controller.ui();
         jk.views.subscriptions();
-        Utilities.pubSub.publish("appendChannel", {});
+        
 
     };
 /* --------------------------------------------------	
@@ -245,6 +250,15 @@ var Tube = (function ($) {
                 jk.views.addColumn({
                     username : ""
                 });   
+            });
+            
+            $(".js-start").on("click", this, function(e){
+                e.preventDefault();
+                jk.vars.channels = $(".js-channels").val().replace(/\n/g,'').split(",");
+                $(".js-target div").not(".ui-admin").remove();
+                // fire it up
+                Utilities.pubSub.publish("appendChannel", {});
+                
             });
         }
     }

@@ -10,7 +10,8 @@ var Tube = (function ($) {
     	cnt : 0,
     	timer : 100,
         //channels : ["tyleroakley","caseyneistat","vlogbrothers", "LastWeekTonight", "vicenews", "TheYoungTurks", "MatthewPatrick13", "jacksepticeye", "ChloeMorello", "MichellePhan", "ThreadBanger", "destinws2", "pbsideachannel"]
-        channels : ["LastWeekTonight"]
+        channels : ["LastWeekTonight"],
+        dump : []
 	}
 /* --------------------------------------------------	
 -------------------------------------------------- */
@@ -47,6 +48,9 @@ var Tube = (function ($) {
                 callBack : function(data) {
                     // get the comments listed...
                     jk.services.comments(data.items[0].id, userName, jk.views.listFilteredComments);
+                    
+                    // update DUMP
+                    jk.vars.dump += "\n\n" + userName + ",\nID: " + data.items[0].id + ",\n";
                     
                 }
             }
@@ -186,7 +190,7 @@ var Tube = (function ($) {
                 
                 // add passes or fails sample
                 if (obj.response[1] == undefined) {
-                
+                    
                     Utilities.mustache.output({
                         container : _channel.find(".list"),
                         template : "#list-item-passes",
@@ -196,6 +200,9 @@ var Tube = (function ($) {
                             message : obj.response[0]
                         }
                     });
+                    
+                    // update DUMP
+                    jk.vars.dump += "MESSAGE: " + obj.response[0] + " USER: " + obj.commenter + ",\n";
                     
                 } else {
                     
@@ -209,6 +216,8 @@ var Tube = (function ($) {
                             tags : obj.response[1][0]
                         }
                     });
+                    // update DUMP
+                    jk.vars.dump += "** [";
                     
                     // incident count (filtered messages)
                     _channel.find(".meta-incidents-total").html(Number(_channel.find(".meta-incidents-total").html()) + 1);
@@ -219,9 +228,10 @@ var Tube = (function ($) {
                             _tag = this.tag;
                         
                         _channel.find(".meta-" + _risk + "-total").append('<span class="tag ' + _risk + '">' + _tag + '</span>');
-                        
+                        jk.vars.dump += _tag + "-" + _risk + " ";
                     });
                     
+                    jk.vars.dump += "] MESSAGE: " + obj.ogMessage + " FILTERED: " + obj.response[0] + " USER: " + obj.commenter + ",\n";
                 }
             });
         }
@@ -259,6 +269,17 @@ var Tube = (function ($) {
                 // fire it up
                 Utilities.pubSub.publish("appendChannel", {});
                 
+            });
+            
+            $(".js-dump").on("click", this, function(e){
+                var _textFile = null,
+                    _data = new Blob([jk.vars.dump], {type: 'text/csv'});
+
+                if (_textFile !== null) {
+                  window.URL.revokeObjectURL(_textFile);
+                }
+                _textFile = window.URL.createObjectURL(_data);
+                window.open(_textFile, '_blank');
             });
         }
     }

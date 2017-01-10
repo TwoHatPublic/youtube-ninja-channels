@@ -14,7 +14,7 @@ var SiftNinja = (function ($) {
             var payload = {
                 "async": true,
                 "crossDomain": true,
-                "url": "https://twohat.com/api/sift-ninja/marketing/",
+                "url": "https://twohat.com/api/sift-ninja/youtube/",
                 "method": "POST",
                 "processData": false,
                 "data": JSON.stringify(body)
@@ -52,9 +52,9 @@ var SiftNinja = (function ($) {
                                 
                         });
                     }
-                    callBack(_arr, _hashes);
+                    callBack(_arr, _hashes, response);
                 } else {
-                    callBack([]);
+                    callBack(_arr, _hashes, response);
                 }
                                 
 /*

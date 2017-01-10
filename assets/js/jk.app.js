@@ -3,20 +3,34 @@ var Tube = (function ($) {
     // @jessekorzan
     //
 	var jk = {};
-	jk.config = {
-    	key : "AIzaSyDLeXJ9r25Yx7VM33h5FDQuZNlfZGixfE8"
-	};
+	jk.config = {};
 	jk.vars = {
     	cnt : 0,
     	timer : 100,
         //channels : ["tyleroakley","caseyneistat","vlogbrothers", "LastWeekTonight", "vicenews", "TheYoungTurks", "MatthewPatrick13", "jacksepticeye", "ChloeMorello", "MichellePhan", "ThreadBanger", "destinws2", "pbsideachannel"]
         channels : ["LastWeekTonight"],
-        dump : []
+        dump : {
+            currentChannel : "",
+            currentChannelID : "",
+            data : "/n"
+        }
 	}
 /* --------------------------------------------------	
 -------------------------------------------------- */
     // INIT this f**ker
     jk.init = function () {
+        
+        // header for data DUMP (CSV file)
+        jk.vars.dump.data += 'USERNAME, '; 
+        jk.vars.dump.data += 'CHANNEL ID, '; 
+        jk.vars.dump.data += 'MESSAGE, ';        
+        jk.vars.dump.data += 'PASSES, ';
+        jk.vars.dump.data += 'HASHED, ';
+        jk.vars.dump.data += 'BULLYING, ';
+        jk.vars.dump.data += 'VULGAR, ';
+        jk.vars.dump.data += 'RACIST, ';
+        jk.vars.dump.data += 'SEXTING, ';
+        jk.vars.dump.data += 'FIGHTING';
         
         // append these channels:
         // jk.vars.channels = [];
@@ -50,7 +64,8 @@ var Tube = (function ($) {
                     jk.services.comments(data.items[0].id, userName, jk.views.listFilteredComments);
                     
                     // update DUMP
-                    jk.vars.dump += "\n\n" + userName + ",\nID: " + data.items[0].id + ",\n";
+                    jk.vars.dump.currentChannel = userName;
+                    jk.vars.dump.currentChannelID = data.items[0].id;
                     
                 }
             }
@@ -65,7 +80,6 @@ var Tube = (function ($) {
                 data : {
                     part : "snippet",
                     maxResults : 100,
-                    //key :   jk.config.key,
                     allThreadsRelatedToChannelId : channelID
                 },
                 callBack : function(data) {
@@ -76,7 +90,7 @@ var Tube = (function ($) {
         },
         ninja : function (message, commentUserName, userName) {
    
-            SiftNinja.services.classify(message, commentUserName, function(tags, hashes) {
+            SiftNinja.services.classify(message, commentUserName, function(tags, hashes, response) {
                                
                 var _return = [];
                 if (tags.length > 0) {
@@ -92,6 +106,20 @@ var Tube = (function ($) {
                     response : _return,
                     ogMessage : message
                 });
+                
+             
+                // add new line to data DUMP
+                jk.vars.dump.data += "\n";
+                jk.vars.dump.data += jk.vars.dump.currentChannel + ', '; 
+                jk.vars.dump.data += jk.vars.dump.currentChannelID + ', '; 
+                jk.vars.dump.data += '"' + message.replace(/,/g, "") + '", ';   
+                jk.vars.dump.data += response.response + ', ';
+                jk.vars.dump.data += (response.hashes.length) ? '"' + response.hashes[0]['hashed'].replace(/,/g, "") + '", ' : ', ';
+                jk.vars.dump.data += response.tags.bullying + ', ';
+                jk.vars.dump.data += response.tags.vulgar + ', ';
+                jk.vars.dump.data += response.tags.racist + ', ';
+                jk.vars.dump.data += response.tags.sexting + ', ';
+                jk.vars.dump.data += response.tags.fighting;
                 
             });
             
@@ -200,10 +228,7 @@ var Tube = (function ($) {
                             message : obj.response[0]
                         }
                     });
-                    
-                    // update DUMP
-                    jk.vars.dump += "MESSAGE: " + obj.response[0] + " USER: " + obj.commenter + ",\n";
-                    
+                                        
                 } else {
                     
                     Utilities.mustache.output({
@@ -216,9 +241,7 @@ var Tube = (function ($) {
                             tags : obj.response[1][0]
                         }
                     });
-                    // update DUMP
-                    jk.vars.dump += "** [";
-                    
+                                       
                     // incident count (filtered messages)
                     _channel.find(".meta-incidents-total").html(Number(_channel.find(".meta-incidents-total").html()) + 1);
                     
@@ -228,10 +251,8 @@ var Tube = (function ($) {
                             _tag = this.tag;
                         
                         _channel.find(".meta-" + _risk + "-total").append('<span class="tag ' + _risk + '">' + _tag + '</span>');
-                        jk.vars.dump += _tag + "-" + _risk + " ";
                     });
                     
-                    jk.vars.dump += "] MESSAGE: " + obj.ogMessage + " FILTERED: " + obj.response[0] + " USER: " + obj.commenter + ",\n";
                 }
             });
         }
@@ -273,7 +294,7 @@ var Tube = (function ($) {
             
             $(".js-dump").on("click", this, function(e){
                 var _textFile = null,
-                    _data = new Blob([jk.vars.dump], {type: 'text/csv'});
+                    _data = new Blob([jk.vars.dump.data], {type: 'text/csv'});
 
                 if (_textFile !== null) {
                   window.URL.revokeObjectURL(_textFile);

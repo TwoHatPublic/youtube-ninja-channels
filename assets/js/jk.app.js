@@ -39,6 +39,12 @@ var Tube = (function ($) {
         jk.controller.ui();
         jk.views.subscriptions();
         
+        
+        var autoRun = Utilities.queryString.parameter("auto");
+        
+        if (autoRun) {
+            jk.controller.run();
+        }
 
     };
 /* --------------------------------------------------	
@@ -89,9 +95,14 @@ var Tube = (function ($) {
             Utilities.getJSON.process(_options);
         },
         ninja : function (message, commentUserName, userName) {
-   
+            
+            // clean it...
+            message = message.replace(/&#39;/g, "'").replace(/&quot;/g, "");
+
             SiftNinja.services.classify(message, commentUserName, function(tags, hashes, response) {
-                               
+                
+                
+                
                 var _return = [];
                 if (tags.length > 0) {
                     _return.push([hashes], [tags]);
@@ -165,7 +176,7 @@ var Tube = (function ($) {
 	        // loop through comments --> send to Ninja 
 	        function process (cnt) {
     	        var _item = data.items[cnt],
-    	            _str = _item.snippet.topLevelComment.snippet.textDisplay,
+    	            _str = _item.snippet.topLevelComment.snippet.textDisplay.toString(),
                     _commentUserName = _item.snippet.topLevelComment.snippet.authorDisplayName;
     	        
     	        jk.services.ninja(_str, _commentUserName, youTubeStar);
@@ -263,6 +274,12 @@ var Tube = (function ($) {
     //
     // ########################################
     jk.controller = {
+        run : function() {
+            jk.vars.channels = $(".js-channels").val().replace(/\n/g,'').split(",");
+            $(".js-target div").not(".ui-admin").remove();
+            // fire it up
+            Utilities.pubSub.publish("appendChannel", {});
+        },
         ui : function () {
             
             $("body").on("submit", "form", function(e){
@@ -285,17 +302,15 @@ var Tube = (function ($) {
             
             $(".js-start").on("click", this, function(e){
                 e.preventDefault();
-                jk.vars.channels = $(".js-channels").val().replace(/\n/g,'').split(",");
-                $(".js-target div").not(".ui-admin").remove();
-                // fire it up
-                Utilities.pubSub.publish("appendChannel", {});
+                jk.controller.run();
                 
             });
             
             $(".js-dump").on("click", this, function(e){
                 var _textFile = null,
-                    _data = new Blob([jk.vars.dump.data], {type: 'text/csv'});
-
+                    //_data = new Blob([jk.vars.dump.data], {type: 'text/csv'});
+                    _data = new Blob([jk.vars.dump.data], {type: 'text/plain'});
+                    
                 if (_textFile !== null) {
                   window.URL.revokeObjectURL(_textFile);
                 }

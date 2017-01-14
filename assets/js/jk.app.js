@@ -308,8 +308,8 @@ var Tube = (function ($) {
             
             $(".js-dump").on("click", this, function(e){
                 var _textFile = null,
-                    //_data = new Blob([jk.vars.dump.data], {type: 'text/csv'});
-                    _data = new Blob([jk.vars.dump.data], {type: 'text/plain'});
+                    _data = new Blob([jk.vars.dump.data], {type: 'text/csv'});
+                    //_data = new Blob([jk.vars.dump.data], {type: 'text/plain'});
                     
                 if (_textFile !== null) {
                   window.URL.revokeObjectURL(_textFile);
